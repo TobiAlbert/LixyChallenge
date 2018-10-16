@@ -7,4 +7,6 @@
     <string name="edit_text_error_message">Required Field</string>
     <string name="app_bar_title">Prime Number Sheet</string>
 
+    <string name="sheet_activity_toolbar_title">Sheet View</string>
+
 </resources>
