@@ -4,7 +4,7 @@ multiplication table.
 
 ## Contents
 - [Android Studio IDE Setup](#markdown-header-android-studio-ide-setup)
-- [Libraries Used](#markdown-header-libraries-used)
+- [Libraries Used](#libraries-used)
 
 ## Android Studio IDE Setup
 
