@@ -1,21 +1,21 @@
 package com.tobidaada.primetablechallenge;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.evrencoskun.tableview.TableView;
+import com.tobidaada.primetablechallenge.model.Cell;
+import com.tobidaada.primetablechallenge.model.ColumnHeader;
+import com.tobidaada.primetablechallenge.model.RowHeader;
 import com.tobidaada.primetablechallenge.utils.PrimeNumberGeneratorUtils;
 
 import java.util.ArrayList;
@@ -25,6 +25,12 @@ public class MainActivity2 extends AppCompatActivity {
 
     private TextView mTextView;
     private EditText mEditText;
+    private TableView mTableView;
+    private TableViewAdapter mAdapter;
+    private List<RowHeader> mRowHeaderList = new ArrayList<>();
+    private List<ColumnHeader> mColumnHeaderList = new ArrayList<>();
+    private List<List<Cell>> mCellList = new ArrayList<>();
+
 
 
     @Override
@@ -36,12 +42,26 @@ public class MainActivity2 extends AppCompatActivity {
         mTextView = findViewById(R.id.tv);
         mEditText = findViewById(R.id.et);
 
+        mTableView = findViewById(R.id.tableView);
+
+        mAdapter = new TableViewAdapter(getApplicationContext());
+
+        mTableView.setAdapter(mAdapter);
+        mAdapter.setAllItems(mColumnHeaderList, mRowHeaderList, mCellList);
+
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onPrimeNumberLengthEntered();
             }
         });
+
+        if (savedInstanceState != null) {
+            String length = savedInstanceState.getString("userInput");
+            mEditText.setText(length);
+
+            generatePrimeNumbers(Integer.parseInt(length));
+        }
 
     }
 
@@ -63,6 +83,25 @@ public class MainActivity2 extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("userInput", mEditText.getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            String length = savedInstanceState.getString("userInput");
+            mEditText.setText(length);
+
+            generatePrimeNumbers(Integer.parseInt(length));
+
+        }
+    }
+
     private void onPrimeNumberLengthEntered() {
         boolean isOk = true;
 
@@ -78,11 +117,6 @@ public class MainActivity2 extends AppCompatActivity {
             int length = Integer.parseInt(numberLength);
             generatePrimeNumbers(length);
         }
-    }
-
-    private void test() {
-
-
     }
 
     private List<TextView> generateTextViews(int length) {
@@ -106,31 +140,31 @@ public class MainActivity2 extends AppCompatActivity {
     private void generatePrimeNumbers(int numberLength) {
         List<Integer> primeNumberList = PrimeNumberGeneratorUtils.generatePrimeNumbers(numberLength);
 
-        mTextView.append(" ");
-        for (int primeNumber: primeNumberList) {
-            mTextView.append(String.valueOf(primeNumber) + " ");
+        for (int number: primeNumberList) {
+            mRowHeaderList.add(new RowHeader(String.valueOf(number), String.valueOf(number)));
+            mColumnHeaderList.add(new ColumnHeader(String.valueOf(number), String.valueOf(number)));
         }
-
-        mTextView.append("\n");
 
         for (int i = 0; i < primeNumberList.size(); i++) {
 
-            mTextView.append(primeNumberList.get(i) + " ");
+            List<Cell> cellList = new ArrayList<>();
 
             for (int j = 0; j < primeNumberList.size(); j++) {
-                int mul = primeNumberList.get(i) * primeNumberList.get(j);
-                mTextView.append(String.valueOf(mul) + " ");
-
+                int product = primeNumberList.get(i) * primeNumberList.get(j);
+                cellList.add(new Cell(i + "-" + j, String.valueOf(product)));
             }
 
-            mTextView.append("\n");
+            mCellList.add(cellList);
         }
+
+        mAdapter.setAllItems(mColumnHeaderList, mRowHeaderList, mCellList);
 
     }
 
     private void onRefreshLayout() {
         mTextView.setText("");
         mEditText.setText("");
+        mAdapter.removeRowRange(0, mRowHeaderList.size());
     }
 
 }
