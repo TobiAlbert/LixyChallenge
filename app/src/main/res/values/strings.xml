@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">PrimeTableChallenge</string>
+
+    <!-- Edit Text Hints-->
+    <string name="number_of_primes_hint">How many prime numbers?</string>
+    <string name="enter_button_text">Enter</string>
+    <string name="edit_text_error_message">Required Field</string>
+    <string name="app_bar_title">Prime Number Sheet</string>
+
 </resources>

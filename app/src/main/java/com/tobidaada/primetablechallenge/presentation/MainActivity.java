@@ -1,18 +1,22 @@
-package com.tobidaada.primetablechallenge;
+package com.tobidaada.primetablechallenge.presentation;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.evrencoskun.tableview.TableView;
+import com.tobidaada.primetablechallenge.R;
+import com.tobidaada.primetablechallenge.adapters.TableViewAdapter;
 import com.tobidaada.primetablechallenge.model.Cell;
 import com.tobidaada.primetablechallenge.model.ColumnHeader;
 import com.tobidaada.primetablechallenge.model.RowHeader;
@@ -21,16 +25,15 @@ import com.tobidaada.primetablechallenge.utils.PrimeNumberGeneratorUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity2 extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextView;
     private EditText mEditText;
     private TableView mTableView;
+    private FrameLayout mFrameLayout;
     private TableViewAdapter mAdapter;
     private List<RowHeader> mRowHeaderList = new ArrayList<>();
     private List<ColumnHeader> mColumnHeaderList = new ArrayList<>();
     private List<List<Cell>> mCellList = new ArrayList<>();
-
 
 
     @Override
@@ -39,15 +42,25 @@ public class MainActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button mButton = findViewById(R.id.btn);
-        mTextView = findViewById(R.id.tv);
         mEditText = findViewById(R.id.et);
 
-        mTableView = findViewById(R.id.tableView);
+        mTableView = new TableView(this);
+        mFrameLayout = findViewById(R.id.frameView);
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
+
+        mTableView.setLayoutParams(layoutParams);
+        mFrameLayout.addView(mTableView);
 
         mAdapter = new TableViewAdapter(getApplicationContext());
 
         mTableView.setAdapter(mAdapter);
         mAdapter.setAllItems(mColumnHeaderList, mRowHeaderList, mCellList);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,13 +68,6 @@ public class MainActivity2 extends AppCompatActivity {
                 onPrimeNumberLengthEntered();
             }
         });
-
-        if (savedInstanceState != null) {
-            String length = savedInstanceState.getString("userInput");
-            mEditText.setText(length);
-
-            generatePrimeNumbers(Integer.parseInt(length));
-        }
 
     }
 
@@ -86,7 +92,11 @@ public class MainActivity2 extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("userInput", mEditText.getText().toString());
+
+        if (mEditText.getText().toString().length() >= 1) {
+            outState.putString("userInput", mEditText.getText().toString());
+        }
+
     }
 
     @Override
@@ -97,8 +107,9 @@ public class MainActivity2 extends AppCompatActivity {
             String length = savedInstanceState.getString("userInput");
             mEditText.setText(length);
 
-            generatePrimeNumbers(Integer.parseInt(length));
-
+            if (!TextUtils.isEmpty(length)) {
+                generatePrimeNumbers(Integer.parseInt(length));
+            }
         }
     }
 
@@ -113,28 +124,9 @@ public class MainActivity2 extends AppCompatActivity {
         }
 
         if (isOk) {
-            mTextView.setText("");
             int length = Integer.parseInt(numberLength);
             generatePrimeNumbers(length);
         }
-    }
-
-    private List<TextView> generateTextViews(int length) {
-
-        RecyclerView rv = new RecyclerView(this);
-        RecyclerView.LayoutParams llm = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT,
-                RecyclerView.LayoutParams.WRAP_CONTENT);
-        rv.setLayoutParams(llm);
-
-        List<TextView> textViews = new ArrayList<>();
-
-        for (int i = 0; i < length; i++) {
-            TextView textView = new TextView(this);
-            textView.setId(i);
-            textViews.add(textView);
-        }
-
-        return textViews;
     }
 
     private void generatePrimeNumbers(int numberLength) {
@@ -157,14 +149,35 @@ public class MainActivity2 extends AppCompatActivity {
             mCellList.add(cellList);
         }
 
+        mTableView = new TableView(this);
+
+        mFrameLayout = findViewById(R.id.frameView);
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
+
+        mTableView.setLayoutParams(layoutParams);
+        mFrameLayout.addView(mTableView);
+
+
         mAdapter.setAllItems(mColumnHeaderList, mRowHeaderList, mCellList);
 
     }
 
     private void onRefreshLayout() {
-        mTextView.setText("");
+
         mEditText.setText("");
-        mAdapter.removeRowRange(0, mRowHeaderList.size());
+        mFrameLayout.removeAllViews();
+
+        /*mTableView = new TableView(this);
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
+
+        mTableView.setLayoutParams(layoutParams);
+        mFrameLayout.addView(mTableView);
+*/
+
     }
 
 }

@@ -1,4 +1,4 @@
-package com.tobidaada.primetablechallenge;
+package com.tobidaada.primetablechallenge.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.evrencoskun.tableview.adapter.AbstractTableAdapter;
 import com.evrencoskun.tableview.adapter.recyclerview.holder.AbstractViewHolder;
+import com.tobidaada.primetablechallenge.R;
 import com.tobidaada.primetablechallenge.model.Cell;
 import com.tobidaada.primetablechallenge.model.ColumnHeader;
 import com.tobidaada.primetablechallenge.model.RowHeader;
@@ -29,7 +30,6 @@ public class TableViewAdapter extends AbstractTableAdapter<ColumnHeader, RowHead
         public CellViewHolder(View itemView) {
             super(itemView);
             cellTextView = itemView.findViewById(R.id.tv_cell_data);
-
         }
     }
 

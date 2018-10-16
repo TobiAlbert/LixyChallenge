@@ -1,46 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.TextInputLayout
+    android:id="@+id/textInput"
+    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="8dp"
+    app:layout_constraintBottom_toTopOf="@+id/frameView"
+    app:layout_constraintEnd_toStartOf="@+id/btn"
+    app:layout_constraintStart_toStartOf="@+id/guideline">
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/et"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="@string/number_of_primes_hint"
+        android:inputType="number" />
+
+
+</android.support.design.widget.TextInputLayout>
+
+<android.support.design.button.MaterialButton
+    android:id="@+id/btn"
+    style="@style/Widget.MaterialComponents.Button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="8dp"
+    android:text="@string/enter_button_text"
+    app:layout_constraintBottom_toBottomOf="@+id/textInput"
+    app:layout_constraintEnd_toStartOf="@+id/guideline2"
+    app:layout_constraintTop_toTopOf="@+id/textInput" />
+
+    <FrameLayout
+        android:id="@+id/frameView"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/btn"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+<android.support.constraint.Guideline
+    android:id="@+id/guideline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_begin="8dp" />
+
+<android.support.constraint.Guideline
+    android:id="@+id/guideline2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_end="8dp" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:title="@string/app_bar_title"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:layout_below="@+id/toolbar"
-        android:id="@+id/et"
-        android:inputType="number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/tv"
-        android:layout_below="@+id/et"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"/>
-
-    <Button
-        android:id="@+id/btn"
-        android:layout_below="@+id/tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enter"/>
-
-    <com.evrencoskun.tableview.TableView
-        android:id="@+id/tableView"
-        android:layout_below="@+id/btn"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:column_header_height="@dimen/column_header_height"
-        app:row_header_width="@dimen/row_header_width"/>
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
