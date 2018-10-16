@@ -34,4 +34,13 @@
         android:layout_height="wrap_content"
         android:text="Enter"/>
 
+    <com.evrencoskun.tableview.TableView
+        android:id="@+id/tableView"
+        android:layout_below="@+id/btn"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:column_header_height="@dimen/column_header_height"
+        app:row_header_width="@dimen/row_header_width"/>
+
 </RelativeLayout>
