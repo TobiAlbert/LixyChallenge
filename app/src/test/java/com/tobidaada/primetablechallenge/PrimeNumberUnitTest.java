@@ -13,6 +13,11 @@ public class PrimeNumberUnitTest {
 
     @Test
     public void primeNumberGeneratorReturnsRequiredLength() {
+
+        // generate a random integer to serve a input
+        // ensure that the size of list returned is equal
+        // to the random number generated.
+
         Random random = new Random();
         int length = random.nextInt(100);
         List<Integer> primeNumbers = PrimeNumberGeneratorUtils.generatePrimeNumbers(length);

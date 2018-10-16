@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,20 +14,31 @@ import android.widget.EditText;
 import com.tobidaada.primetablechallenge.R;
 import com.tobidaada.primetablechallenge.presentation.sheet.SheetActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.MainView{
 
     private EditText mEditText;
+    private MainContract.MainPresenter mainPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initializeViews();
+
+        mainPresenter = new MainPresenter(this); // get a reference to the presenter
+
+        if (savedInstanceState != null) {
+            mEditText.setText(savedInstanceState.getString("userInput"));
+        }
+
+    }
+
+    private void initializeViews() {
         Button mButton = findViewById(R.id.btn);
         mEditText = findViewById(R.id.et);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
 
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -37,11 +47,6 @@ public class MainActivity extends AppCompatActivity {
                 onPrimeNumberLengthEntered();
             }
         });
-
-        if (savedInstanceState != null) {
-            mEditText.setText(savedInstanceState.getString("userInput"));
-        }
-
     }
 
     @Override
@@ -54,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_clear:
-                onRefreshLayout();
+                refreshLayout();
                 return true;
 
             default:
@@ -82,29 +87,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void onPrimeNumberLengthEntered() {
-        boolean isOk = true;
-
-        String numberLength = mEditText.getText().toString();
-
-        if (TextUtils.isEmpty(numberLength)) {
-            mEditText.setError("Required Field");
-            isOk = false;
-        }
-
-        if (isOk) {
-            int length = Integer.parseInt(numberLength);
-            sendDataToSheetActivity(length);
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mainPresenter.onDestroy();
     }
 
-    private void sendDataToSheetActivity(int numberLength) {
+    private void onPrimeNumberLengthEntered() {
+        // send user input to the presenter for verification
+        mainPresenter.verifyUserInput(mEditText.getText().toString());
+    }
+
+    @Override
+    public void sendDataToSheetActivity(int numberLength) {
         Intent intent = new Intent(MainActivity.this, SheetActivity.class);
         intent.putExtra("numberLength", numberLength);
         startActivity(intent);
     }
 
-    private void onRefreshLayout() {
+    @Override
+    public void showErrorMessage() {
+        mEditText.setError(getString(R.string.edit_text_error_message));
+    }
+
+    @Override
+    public void refreshLayout() {
         mEditText.setText("");
     }
+
 }

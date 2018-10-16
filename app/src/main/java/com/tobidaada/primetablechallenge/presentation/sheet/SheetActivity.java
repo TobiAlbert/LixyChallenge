@@ -11,23 +11,36 @@ import com.tobidaada.primetablechallenge.adapters.TableViewAdapter;
 import com.tobidaada.primetablechallenge.model.Cell;
 import com.tobidaada.primetablechallenge.model.ColumnHeader;
 import com.tobidaada.primetablechallenge.model.RowHeader;
-import com.tobidaada.primetablechallenge.utils.PrimeNumberGeneratorUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class SheetActivity extends AppCompatActivity {
+public class SheetActivity extends AppCompatActivity implements SheetContract.SheetView {
 
     private TableViewAdapter mAdapter;
-    private List<RowHeader> mRowHeaderList = new ArrayList<>();
-    private List<ColumnHeader> mColumnHeaderList = new ArrayList<>();
-    private List<List<Cell>> mCellList = new ArrayList<>();
+    private SheetContract.SheetPresenter mSheetPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sheet);
 
+        initializeViews();
+
+        mSheetPresenter = new SheetPresenter(this);
+
+        Intent intent = getIntent();
+
+        if (intent != null) {
+
+            if (intent.hasExtra("numberLength")) {
+                int numberLength = intent.getIntExtra("numberLength", 0);
+
+                mSheetPresenter.generatePrimeNumbers(numberLength);
+            }
+        }
+    }
+
+    private void initializeViews() {
         Toolbar toolbar = findViewById(R.id.toolbar_sheet);
         setSupportActionBar(toolbar);
 
@@ -39,17 +52,6 @@ public class SheetActivity extends AppCompatActivity {
         TableView mTableView = findViewById(R.id.tableview_sheet);
         mAdapter = new TableViewAdapter(getApplicationContext());
         mTableView.setAdapter(mAdapter);
-
-        Intent intent = getIntent();
-
-        if (intent != null) {
-
-            if (intent.hasExtra("numberLength")) {
-                int numberLength = intent.getIntExtra("numberLength", 0);
-
-                generatePrimeNumbers(numberLength);
-            }
-        }
     }
 
     @Override
@@ -58,27 +60,14 @@ public class SheetActivity extends AppCompatActivity {
         finish();
     }
 
-    private void generatePrimeNumbers(int numberLength) {
-        List<Integer> primeNumberList = PrimeNumberGeneratorUtils.generatePrimeNumbers(numberLength);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSheetPresenter.onDestroy();
+    }
 
-        for (int number: primeNumberList) {
-            mRowHeaderList.add(new RowHeader(String.valueOf(number), String.valueOf(number)));
-            mColumnHeaderList.add(new ColumnHeader(String.valueOf(number), String.valueOf(number)));
-        }
-
-        for (int i = 0; i < primeNumberList.size(); i++) {
-
-            List<Cell> cellList = new ArrayList<>();
-
-            for (int j = 0; j < primeNumberList.size(); j++) {
-                int product = primeNumberList.get(i) * primeNumberList.get(j);
-                cellList.add(new Cell(i + "-" + j, String.valueOf(product)));
-            }
-
-            mCellList.add(cellList);
-        }
-
-        mAdapter.setAllItems(mColumnHeaderList, mRowHeaderList, mCellList);
-
+    @Override
+    public void displayResults(List<ColumnHeader> columnHeaders, List<RowHeader> rowHeaders, List<List<Cell>> cellList) {
+        mAdapter.setAllItems(columnHeaders, rowHeaders, cellList);
     }
 }
