@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="row_header_width">55dp</dimen>
+    <dimen name="cell_height">40dp</dimen>
+    <dimen name="column_header_height">40dp</dimen>
+
+    <!-- Material Design TableView dimensions -->
+    <dimen name="md_cell_height">40dp</dimen>
+    <dimen name="md_cell_text_size">13sp</dimen>
+    <dimen name="md_column_header_text_size">13sp</dimen>
+    <dimen name="md_column_header_gap_size">28sp</dimen>
+</resources>
