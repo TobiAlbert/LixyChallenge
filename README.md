@@ -3,7 +3,7 @@ Simple Android Application that calculates the first `N` prime numbers and displ
 multiplication table.
 
 ## Contents
-- [Android Studio IDE Setup](#markdown-header-android-studio-ide-setup)
+- [Android Studio IDE Setup](#android-studio-ide-setup)
 - [Libraries Used](#libraries-used)
 
 ## Android Studio IDE Setup
